@@ -1,4 +1,4 @@
-// project 25
+// project 25 
 // this project allows you to press the up and down buttons on the DFROBOT LCD keypad shield v 1.1 to change a face from happy to sad or vise versa 
 // majority of this code is from this website: https://forum.arduino.cc/t/dfrobot-lcd-keypad-shield-v1-1-problems/245593/2
 // up = smiley face & down = sad face
@@ -12,6 +12,7 @@ int adc_key_in  = 0;
 
 #define btnUP     1
 #define btnDOWN   2
+#define btnNONE   5
 
 int read_LCD_buttons(){               // read the buttons
     adc_key_in = analogRead(0);       // read the value from the sensor 
@@ -23,29 +24,34 @@ int read_LCD_buttons(){               // read the buttons
 
     if (adc_key_in < 250 && adc_key_in > 144 )  return btnUP;    // I modifed mv values so pressing other buttons will not change the face
     if (adc_key_in < 450 && adc_key_in > 251)  return btnDOWN; 
+    else return btnNONE;    
 }
 
 void setup(){
    lcd.begin(16, 2);               // start the library
-   lcd.setCursor(0,0);             // set the LCD cursor   position 
+   lcd.setCursor(0,0);             // set the LCD cursor position 
    lcd.print("Push up or down!");  // print a simple message on the LCD
    analogWrite(10, 255);
-  delay(500); 
+   delay(500); 
 } 
-void loop(){
-   lcd.setCursor(0,1);             // move to the begining of the second line
+void loop()
+{
+   lcd.setCursor(0,1);             // move to the begining of the second line  
    lcd_key = read_LCD_buttons();   // read the buttons
 
    switch (lcd_key){               // depending on which button was pushed, we perform an action
 
-       case btnUP:{
+      case btnUP:{
              lcd.print(":)    ");  //  push button "UP" and show the :) on the screen
              break;
        }
-       case btnDOWN:{
+      case btnDOWN:{
              lcd.print(":(    ");  //  push button "DOWN" and show the :( on the screen
              break;
-
+       }
+      case btnNONE:{
+             lcd.print("  ");  //  No action  will show "None" on the screen
+             break;
        }
    }
 }
